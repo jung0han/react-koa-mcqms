@@ -21,10 +21,9 @@ const HeaderMenu = ({ user, onLogout }) => {
       {user ? (
         <Row justify="end">
           <Col>
-            <Tag icon={<UserOutlined />} color="default">
+            <Button icon={<UserOutlined />} onClick={onLogout}>
               {user.username}
-            </Tag>
-            <Button onClick={onLogout}>로그아웃</Button>
+            </Button>
           </Col>
         </Row>
       ) : (

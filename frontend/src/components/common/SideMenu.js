@@ -1,7 +1,6 @@
 import React from 'react';
 import { Layout, Menu } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
-import styled from 'styled-components';
 
 const { SubMenu } = Menu;
 const { Sider } = Layout;

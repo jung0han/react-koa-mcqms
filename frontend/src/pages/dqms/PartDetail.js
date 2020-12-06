@@ -9,6 +9,7 @@ import {
   Badge,
   Layout,
   Breadcrumb,
+  Tooltip,
 } from 'antd';
 
 const { Option } = Select;
@@ -21,9 +22,9 @@ for (let i = 10; i < 36; i++) {
 
 const columns = [
   {
-    title: 'Inspection Type',
+    title: 'Type',
     dataIndex: 'type',
-    width: 150,
+    width: 80,
     filters: [
       {
         text: 'Normal',
@@ -34,8 +35,8 @@ const columns = [
         value: 'CTQ',
       },
       {
-        text: 'Rel',
-        value: 'Rel',
+        text: 'REL',
+        value: 'REL',
       },
     ],
     onFilter: (value, record) => record.type.indexOf(value) === 0,
@@ -43,63 +44,113 @@ const columns = [
   {
     title: 'Inspecion Item',
     dataIndex: 'item',
-    width: 200,
-    sorter: (a, b) => a.partnumber.localeCompare(b.partnumber),
+    width: 180,
+    sorter: (a, b) => a.item.localeCompare(b.item),
     render: (text) => {
       return <Link to={`/${text}`}>{text}</Link>;
     },
+  },
+  {
+    title: 'Specification',
+    dataIndex: 'spec',
+    ellipsis: {
+      showTitle: false,
+    },
+    render: (spec) => (
+      <Tooltip placement="topLeft" title={spec}>
+        {spec}
+      </Tooltip>
+    ),
+  },
+  {
+    title: 'Equipment',
+    dataIndex: 'equipment',
+    width: 100,
+    ellipsis: {
+      showTitle: false,
+    },
+    render: (equipment) => (
+      <Tooltip placement="topLeft" title={equipment}>
+        {equipment}
+      </Tooltip>
+    ),
   },
   {
     title: 'Status',
     dataIndex: 'status',
     width: 120,
     key: 'x',
+    filters: [
+      {
+        text: 'waiting',
+        value: 'waiting',
+      },
+      {
+        text: 'testing',
+        value: 'testing',
+      },
+      {
+        text: 'rejected',
+        value: 'rejected',
+      },
+      {
+        text: 'complated',
+        value: 'complated',
+      },
+    ],
+    onFilter: (value, record) => record.status[1].indexOf(value) === 0,
     render: (text) => <Badge status={text[0]} text={text[1]} />,
   },
   {
-    title: 'Specification',
-    dataIndex: 'spec',
-    width: 300,
+    title: 'Result',
+    dataIndex: 'result',
+    width: 80,
+    filters: [
+      {
+        text: 'OK',
+        value: 'OK',
+      },
+      {
+        text: 'NG',
+        value: 'NG',
+      },
+    ],
   },
   {
     title: 'LSL',
     dataIndex: 'lsl',
-    width: 50,
-    sorter: (a, b) => a.age - b.age,
+    width: 60,
   },
   {
     title: 'Target',
     dataIndex: 'target',
-    width: 50,
-    sorter: (a, b) => a.age - b.age,
+    width: 60,
   },
   {
     title: 'USL',
     dataIndex: 'usl',
-    width: 50,
-    sorter: (a, b) => a.age - b.age,
+    width: 60,
   },
   {
     title: 'Qty',
     dataIndex: 'qty',
-  },
-  {
-    title: 'Equipment',
-    dataIndex: 'equipment',
+    width: 60,
   },
   {
     title: 'UOM',
     dataIndex: 'uom',
+    width: 60,
   },
 ];
 
 const data = [
   {
     key: '1',
-    type: 'Normal',
+    type: 'CTQ',
     item: 'Line & Load Regulation',
-    status: ['error', 'NG'],
-    spec: 'AC : 90V, Freq : 47hz, Load : No Load',
+    status: ['error', 'rejected'],
+    spec:
+      '정격 Line(AC 120V/230V)으로 고정 후 출력 Load를 승인원에 명시된 Max 조건까지 가변 후 출력값 확인',
     lsl: 4.75,
     target: 5,
     usl: 5.25,
@@ -109,42 +160,41 @@ const data = [
   },
   {
     key: '2',
-    type: 'Normal',
-    item: 'Line & Load Regulation',
+    type: 'CTQ',
+    item: 'Over Current Protection',
     status: ['processing', 'testing'],
-    spec: 'AC : 90V, Freq : 47hz, Load : 1300mA',
-    lsl: 4.75,
-    target: 5,
-    usl: 5.25,
+    spec: '부하를 증가시켜 OCP 동작 구간 확인',
+    lsl: 3000,
+    target: 3300,
+    usl: 3600,
     qty: 30,
     equipment: 'DMM, Load',
-    uom: 'V',
+    uom: 'mA',
   },
   {
     key: '3',
     type: 'Normal',
-    item: 'Line & Load Regulation',
-    status: ['success', 'OK'],
-    spec: 'AC : 120V, Freq : 60hz, Load : No Load',
-    lsl: 4.75,
-    target: 5,
-    usl: 5.25,
+    item: 'Ripple & Noise',
+    status: ['default', 'complated'],
+    result: 'OK',
+    spec:
+      '정격 전압(120V / 230V) 입력 후 100% 부하 상태에서 출력단 양단을 측정함',
+    usl: 130,
     qty: 30,
     equipment: 'DMM, Load',
-    uom: 'V',
+    uom: 'mA',
   },
   {
     key: '4',
     type: 'Normal',
-    item: 'Line & Load Regulation',
-    status: ['default', 'waiting'],
-    spec: 'AC : 120V, Freq : 60hz, Load : 1300mA',
-    lsl: 4.75,
-    target: 5,
-    usl: 5.25,
-    qty: 30,
-    equipment: 'DMM, Load',
-    uom: 'V',
+    item: 'Efficiency',
+    status: ['warning', 'waiting'],
+    spec:
+      '지역별(115V / 230V) 입력 조건에서 25% / 50%/ 75%/ 100% Load시 출력전압 및 소비 전력을 측정하여 평균 효율 산출 판정함',
+    lsl: 80.23,
+    qty: 10,
+    equipment: 'Power Source / Power Meter / Loader / DVM',
+    uom: '%',
   },
 ];
 

@@ -13,6 +13,7 @@ import {
   Badge,
   Layout,
   Breadcrumb,
+  Tooltip,
 } from 'antd';
 
 const { Option } = Select;
@@ -25,11 +26,10 @@ for (let i = 10; i < 36; i++) {
 
 const columns = [
   {
-    title: 'Status',
-    dataIndex: 'status',
-    width: 120,
-    key: 'x',
-    render: (text) => <Badge status={text[0]} text={text[1]} />,
+    title: 'Model',
+    dataIndex: 'model',
+    width: 80,
+    sorter: (a, b) => a.model.localeCompare(b.model),
   },
   {
     title: 'Part No',
@@ -43,12 +43,26 @@ const columns = [
   {
     title: 'Part Name',
     dataIndex: 'name',
-    width: 120,
+    ellipsis: {
+      showTitle: false,
+    },
+    render: (name) => (
+      <Tooltip placement="topLeft" title={name}>
+        {name}
+      </Tooltip>
+    ),
   },
   {
     title: 'Vendor',
     dataIndex: 'vendor',
-    width: 120,
+    ellipsis: {
+      showTitle: false,
+    },
+    render: (vendor) => (
+      <Tooltip placement="topLeft" title={vendor}>
+        {vendor}
+      </Tooltip>
+    ),
   },
   {
     title: 'Category',
@@ -85,26 +99,66 @@ const columns = [
   {
     title: 'Seq.',
     dataIndex: 'seq',
-    width: 50,
+    width: 80,
     sorter: (a, b) => a.age - b.age,
+  },
+  {
+    title: 'Status',
+    dataIndex: 'status',
+    width: 120,
+    key: 'x',
+    filters: [
+      {
+        text: 'waiting',
+        value: 'waiting',
+      },
+      {
+        text: 'testing',
+        value: 'testing',
+      },
+      {
+        text: 'rejected',
+        value: 'rejected',
+      },
+      {
+        text: 'complate',
+        value: 'complate',
+      },
+    ],
+    onFilter: (value, record) => record.status[1].indexOf(value) === 0,
+    render: (text) => <Badge status={text[0]} text={text[1]} />,
+  },
+  {
+    title: 'Result',
+    dataIndex: 'result',
+    width: 80,
+    filters: [
+      {
+        text: 'OK',
+        value: 'OK',
+      },
+      {
+        text: 'NG',
+        value: 'NG',
+      },
+    ],
   },
   {
     title: 'Requester',
     dataIndex: 'requester',
+    width: 80,
   },
   {
     title: 'Tester',
     dataIndex: 'tester',
-  },
-  {
-    title: 'Planner',
-    dataIndex: 'planner',
+    width: 80,
   },
 ];
 
 const data = [
   {
     key: '1',
+    model: 'LMF100N',
     partnumber: 'EAB23456784',
     type: 'New',
     seq: 1,
@@ -113,11 +167,11 @@ const data = [
     vendor: 'Qualcomm',
     requester: '아무개',
     tester: '홍길동',
-    planner: '정동우',
-    status: ['warning', 'rcv.waiting'],
+    status: ['warning', 'waiting'],
   },
   {
     key: '2',
+    model: 'LMF100N',
     partnumber: 'EAB23456789',
     type: '4M',
     seq: 2,
@@ -126,11 +180,11 @@ const data = [
     vendor: 'Qualcomm',
     requester: '아무개',
     tester: '홍길동',
-    planner: '정동우',
     status: ['processing', 'testing'],
   },
   {
     key: '3',
+    model: 'LMF100N',
     partnumber: 'EAB23456788',
     type: 'New',
     seq: 1,
@@ -139,11 +193,12 @@ const data = [
     vendor: 'Qualcomm',
     requester: '아무개',
     tester: '홍길동',
-    planner: '정동우',
     status: ['default', 'complate'],
+    result: 'OK',
   },
   {
     key: '4',
+    model: 'LMF100N',
     partnumber: 'EAB23456787',
     type: 'New',
     seq: 1,
@@ -152,7 +207,6 @@ const data = [
     vendor: 'BYD',
     requester: '아무개',
     tester: '홍길동',
-    planner: '정동우',
     status: ['error', 'rejected'],
   },
 ];

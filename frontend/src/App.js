@@ -10,8 +10,10 @@ import { Helmet } from 'react-helmet-async';
 import { Layout } from 'antd';
 import HeaderContainer from './containers/common/HeaderContainer';
 import SideMenu from './components/common/SideMenu';
-import RequestStatus from './components/dqms/RequestStatus';
-import PartDetail from './components/dqms/PartDetail';
+import RequestStatus from './pages/dqms/RequestStatus';
+import PartDetail from './pages/dqms/PartDetail';
+import InspectionPlan from './pages/dqms/InspectionPlan';
+import DimensionPlan from './pages/dqms/DimensionPlan';
 
 const App = () => (
   <Layout style={{ minHeight: '100vh' }}>
@@ -23,7 +25,13 @@ const App = () => (
       <SideMenu />
       <Layout style={{ padding: '0 24px 0' }}>
         <Route component={RequestStatus} path={['/DQMS']} exact />
-        <Route component={PartDetail} path={['/DQMS/EAB23456784']} />
+        <Route component={InspectionPlan} path={['/DQMS/EAB23456784']} exact />
+        <Route
+          component={DimensionPlan}
+          path={['/DQMS/EAB23456784/dimension']}
+          exact
+        />
+        <Route component={PartDetail} path={['/DQMS/EAB23456784/inspection']} />
         <Route component={PostListPage} path={['/@:username']} exact />
         <Route component={LoginPage} path="/login" />
         <Route component={RegisterPage} path="/register" />
